@@ -1,11 +1,9 @@
 package dev.mrtn88.simplekvstore.store.transaction;
 
-import dev.mrtn88.simplekvstore.store.storage.Storage;
 import dev.mrtn88.simplekvstore.store.TransactionCommandsReceiver;
+import dev.mrtn88.simplekvstore.store.storage.Storage;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Optional;
 
 public class TransactionManager<K,V> implements TransactionCommandsReceiver {
 
@@ -55,6 +53,6 @@ public class TransactionManager<K,V> implements TransactionCommandsReceiver {
     }
 
     private TransactionContext<K,V> newTransactionContext(Storage<K,V> storage, TransactionContext<K,V> parent) {
-        return new TransactionContext<>(storage, new Storage<>(new HashMap<>(), new HashMap<>()), parent);
+        return new TransactionContext<>(storage, parent);
     }
 }

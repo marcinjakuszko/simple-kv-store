@@ -8,16 +8,15 @@ import java.util.Optional;
 public class TransactionContext<K,V> implements DataCommandsReceiver<K,V> {
 
     private final Storage<K,V> mainStorage;
-    private final Storage<K, Optional<V>> transactionLog;
     private final TransactionContext<K,V> parentContext;
+    private final TransactionLog<K, V> transactionLog;
 
     public TransactionContext(
             Storage<K,V> mainStorage,
-            Storage<K, Optional<V>> transactionLog,
             TransactionContext<K, V> parentContext) {
         this.mainStorage = mainStorage;
-        this.transactionLog = transactionLog;
         this.parentContext = parentContext;
+        this.transactionLog = new TransactionLog<>();
     }
 
     @Override
@@ -36,9 +35,8 @@ public class TransactionContext<K,V> implements DataCommandsReceiver<K,V> {
 
     @Override
     public void delete(K key) {
-        var value = get(key);
-        transactionLog.delete(key, Optional.of(value));
-        transactionLog.set(key, Optional.empty());
+        var valueToBeRemoved = get(key);
+        transactionLog.delete(key, valueToBeRemoved);
     }
 
     @Override

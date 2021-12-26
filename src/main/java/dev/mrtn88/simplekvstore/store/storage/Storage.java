@@ -3,12 +3,11 @@ package dev.mrtn88.simplekvstore.store.storage;
 import dev.mrtn88.simplekvstore.store.DataCommandsReceiver;
 
 import java.util.Map;
-import java.util.Set;
 
 public class Storage<K, V> implements DataCommandsReceiver<K, V> {
 
-    private final Map<K, V> keyValueMap;
-    private final Map<V, Integer> valueCountMap;
+    protected final Map<K, V> keyValueMap;
+    protected final Map<V, Integer> valueCountMap;
 
     public Storage(Map<K, V> keyValueMap, Map<V, Integer> valueCountMap) {
         this.keyValueMap = keyValueMap;
@@ -40,20 +39,8 @@ public class Storage<K, V> implements DataCommandsReceiver<K, V> {
         }
     }
 
-    public void delete(K key, V value) {
-        var deletedValue = keyValueMap.remove(key);
-        if (deletedValue == null) {
-            var counter = valueCountMap.getOrDefault(value, 0);
-            valueCountMap.put(value, --counter);
-        }
-    }
-
     @Override
     public Integer count(V value) {
         return valueCountMap.getOrDefault(value, 0);
-    }
-
-    public Set<K> getKeys() {
-        return keyValueMap.keySet();
     }
 }
